@@ -1,7 +1,3 @@
-"""
-4F => 0100 1111
-"""
-
 def decimal2bin(number):
     """
     number: int\n
@@ -29,6 +25,7 @@ def hex2bin(_hex):
     hex2bin("3F") => [[0,0,1,1],[1,1,1,1]]\n
     Takes hexadecimal number and converts it to a 4-bit
     two dimensional byte array. Where evey byte represents one hexadecimal number.
+    4F => 0100 1111
     """
     #Start with an empty array, this will be filled
     result = []
