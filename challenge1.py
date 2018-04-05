@@ -1,16 +1,21 @@
-def decimal2bin(number):
+#Support method for hex2bin
+def decimal2bin(number, bit_system):
     """
     number: int\n
     decimal2bin(15) => [1,1,1,1]\n 
-    Returns an 8-bit representation of an integer, with a maximum value
-    of 15.
+    Returns an n-bit representation of an integer, the maximum value depends on the bit system you fill in.
     """
     #Start with the binary representation of 0
-    result = [0,0,0,0]
+    result = []
+    tmp = bit_system
+    while tmp >= 1:
+        result.append(0)
+        tmp /= 2
+
     bin_index = 0
 
     #Number represents the state of the binary sequence
-    column = 8
+    column = bit_system
     while number > 0:
         if number >= column:
             number -= column
@@ -18,6 +23,28 @@ def decimal2bin(number):
         bin_index += 1
         column /= 2
     return result
+
+def contains(sequence, value):
+    """
+    sequence: iterable
+    value: number
+    contains([1,2,3,4], 3) => True
+    Returns True when a sequence contains a certain value, else False.
+    """
+    for i in range(len(sequence)):
+        if sequence[i] == value: return True
+    return False
+
+def find(sequence, value):
+    """
+    array: iterable
+    value: number
+    find([1,2,3,4], 3) => 2
+    Returns the index from the element in the sequence.
+    """
+    for i in range(len(sequence)):
+        if sequence[i] == value: return i
+    return -1
 
 def hex2bin(_hex):
     """
@@ -36,36 +63,28 @@ def hex2bin(_hex):
         tmp = _hex[i]
 
         #Convert the letter to an integer  
-        if tmp == "A" or tmp == "a":
-            tmp = 10
-        elif tmp == "B" or tmp == "b":
-            tmp = 11
-        elif tmp == "C" or tmp == "c":
-            tmp = 12
-        elif tmp == "D" or tmp == "d":
-            tmp = 13
-        elif tmp == "E" or tmp == "e":
-            tmp = 14
-        elif tmp == "F" or tmp == "f":
-            tmp = 15
-        else:
+        hex_set = ["a", "b", "c", "d", "e", "f"]
+        if contains(hex_set, tmp):
+            tmp = find(hex_set, tmp)+10
+        else: 
             tmp = int(tmp) #Python can convert i.e. "3" to 3
 
+
         #Convert the hexadecimal code to binairy
-        result.append(decimal2bin(tmp))
+        result.append(decimal2bin(tmp, 8))
 
     return result
 
-
-def BinairtoDecimal(byte):
+#Support method for bin2base64
+def BinairtoDecimal(byte, bit_system):
     """
-    byte: [0,0,0,0,0,0] (8-byte array)
+    byte: [0,0,0,0,0,0] (n-byte array)
     BinairtoDecimal([0,0,0,0,0,0]) => 0
-    Returns an integer number for a 8-bit binairy representation.
+    Returns an integer number for a n-bit binairy representation.
     """
     #Start at 0 and increment it every each iteration
     result = 0
-    column = 32
+    column = bit_system
     for bit in byte:
         result = result + (column * bit)
         column = column /2
@@ -86,7 +105,7 @@ def bin2base64(byte_array):
     #5. (optional) Make one string for prety printing ;)
 
     #Example
-    # 0001 01010 1100 1010
+    # 0001 0101 1100 1010
     #Step 1: 000101 010110 01010
     #Step 2: 000101 010110 010100 (added 1 zero)
     #Step 3: 5      22     20
@@ -111,7 +130,7 @@ def bin2base64(byte_array):
     #Iterate over the bits in pieces of 6
     result = []
     for i in range(0, len(bits), 6):
-        result.append(BinairtoDecimal(bits[i:i+6]))
+        result.append(BinairtoDecimal(bits[i:i+6], 32))
     
     #Step 4
     #This array represents the base64 table, the index in the array corresponds with the correct character
@@ -131,10 +150,17 @@ def bin2base64(byte_array):
 
 
 if __name__ == "__main__":
+    #Convert hex to base64
+               #The string:
     encoded = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+                #Should produce:
     solution = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
+
+    #So go ahead and make that happen. You'll need to use this code for the rest of the exercises.
 
     if bin2base64(hex2bin(encoded)) == solution:
         print("Yeah answer is correct!!!!")
     else:
         print("Wrong!!!!!!")
+
+    #Cryptopals rule: Always operate on raw bytes, never on encoded strings. Only use hex and base64 for pretty-printing.

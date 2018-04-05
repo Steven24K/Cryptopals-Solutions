@@ -1,4 +1,5 @@
 from challenge1 import hex2bin
+from challenge1 import BinairtoDecimal
 
 
 def Xor(byte1, byte2):
@@ -40,20 +41,6 @@ def XorHexstrings(buffer1 , buffer2):
         print("No two equal lenght buffers")
 
 
-def bin2decimal(byte):
-    """
-    byte: [0,0,0,0] (4-byte array)
-    BinairtoDecimal([0,0,0,0]) => 0
-    Returns an integer number for a 4-bit binairy representation.
-    """
-    #Start at 0 and increment it every each iteration
-    result = 0
-    column = 8
-    for bit in byte:
-        result = result + (column * bit)
-        column = column /2
-    return int(result) #To convert the result from float to an integer, because of the division
-
 def bin2hex(byte_array):
     """
     byte_array: byte_array\n
@@ -63,21 +50,12 @@ def bin2hex(byte_array):
     result = ""
 
     for byte in byte_array:
-        tmp = bin2decimal(byte)
+        tmp = BinairtoDecimal(byte, 8)
 
         #Convert the integer to a letter
-        if tmp == 10:
-            tmp = "a"
-        elif tmp == 11:
-            tmp = "b"
-        elif tmp == 12:
-            tmp = "c"
-        elif tmp == 13:
-            tmp = "d"
-        elif tmp == 14:
-            tmp = "e"
-        elif tmp == 15:
-            tmp = "f"
+        hex_set = ["a", "b", "c", "d", "e", "f"]
+        if (tmp > 9):
+            tmp = hex_set[tmp-10]
         else:
             tmp = str(tmp) #Converts i.e. 3 to "3"
         
@@ -87,9 +65,15 @@ def bin2hex(byte_array):
 
 
 if __name__ == "__main__":
-    buffer1 = "1c0111001f010100061a024b53535009181c"
-    buffer2 = "686974207468652062756c6c277320657965"
+    #Fixed XOR
 
+    #Write a function that takes two equal-length buffers and produces their XOR combination.
+
+              #If your function works properly, then when you feed it the string:
+    buffer1 = "1c0111001f010100061a024b53535009181c"
+              #after hex decoding, and when XOR'd against:
+    buffer2 = "686974207468652062756c6c277320657965"
+               #should produce:
     solution = "746865206b696420646f6e277420706c6179"
 
     if bin2hex(XorHexstrings(buffer1, buffer2)) == solution:  
